@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:pexeso/game/game.dart';
+
+import 'package:pexeso/game/game2.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,10 +20,13 @@ class HomeScreen extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DynamicRectangles()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DynamicRectangles2()));
             },
             icon: Icon(Icons.play_arrow),
+            color: Colors.amber,
             iconSize: 100,
           ),
         ],
