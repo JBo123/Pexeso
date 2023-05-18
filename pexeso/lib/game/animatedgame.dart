@@ -3,12 +3,12 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:pexeso/game/victory.dart';
 
-class DynamicRectangles2 extends StatefulWidget {
+class DynamicRectangles3 extends StatefulWidget {
   @override
-  _DynamicRectanglesState2 createState() => _DynamicRectanglesState2();
+  _DynamicRectanglesState3 createState() => _DynamicRectanglesState3();
 }
 
-class _DynamicRectanglesState2 extends State<DynamicRectangles2> {
+class _DynamicRectanglesState3 extends State<DynamicRectangles3> {
   int flipedCardsCounter = 0;
   List<String> flipedCards = [];
   List<Map<String, dynamic>> symbols = [
@@ -29,24 +29,10 @@ class _DynamicRectanglesState2 extends State<DynamicRectangles2> {
     {"text": "❤️‍🔥", "visible": false},
     {"text": "❤️‍🔥", "visible": false},
     {"text": "🖇️", "visible": false},
-    {"text": "🖇️", "visible": false},
-    {"text": "🧌", "visible": false},
-    {"text": "🧌", "visible": false},
-    {"text": "🧜‍♀️", "visible": false},
-    {"text": "🧜‍♀️", "visible": false},
-    {"text": "🐸", "visible": false},
-    {"text": "🐸", "visible": false},
-    {"text": "🙈", "visible": false},
-    {"text": "🙈", "visible": false},
-    {"text": "🐣", "visible": false},
-    {"text": "🐣", "visible": false},
-    {"text": "🍬", "visible": false},
-    {"text": "🍬", "visible": false},
-    {"text": "🎱", "visible": false},
-    {"text": "🎱", "visible": false},
+    {"text": "🖇️", "visible": false}
   ];
   bool checkIfGameOver() {
-    for (int i = 0; i < 32; i++) {
+    for (int i = 0; i < 18; i++) {
       if (symbols[i]["text"] != "✅") {
         return true;
       }
@@ -64,13 +50,13 @@ class _DynamicRectanglesState2 extends State<DynamicRectangles2> {
       );
     }
     flipedCardsCounter = 0;
-    for (int i = 0; i < 32; i++) {
+    for (int i = 0; i < 18; i++) {
       if (symbols[i]["visible"] == true && symbols[i]["text"] != "✅") {
         flipedCards.add(symbols[i]['text']);
       }
     }
     if (flipedCards[0] == flipedCards[1]) {
-      for (int i = 0; i < 32; i++) {
+      for (int i = 0; i < 18; i++) {
         if (symbols[i]["visible"] == true) {
           setState(() {
             symbols[i]["text"] = "✅";
@@ -78,7 +64,7 @@ class _DynamicRectanglesState2 extends State<DynamicRectangles2> {
         }
       }
     } else if (flipedCards[0] != flipedCards[1]) {
-      for (int i = 0; i < 32; i++) {
+      for (int i = 0; i < 18; i++) {
         if (symbols[i]["visible"] == true && symbols[i]["text"] != "✅") {
           setState(() {
             symbols[i]["visible"] = false;
@@ -116,26 +102,58 @@ class _DynamicRectanglesState2 extends State<DynamicRectangles2> {
                     ),
                     onPressed: () {
                       if (symbols[index]["text"] == "✅") return null;
-                      setState(() {
-                        symbols[index]["visible"] = true;
-                        flipedCardsCounter++;
-                        if (flipedCardsCounter == 2) {
-                          symbols[index]["visible"] = true;
-                          Future.delayed(const Duration(milliseconds: 100), () {
-                            checkFlipedCards();
-                            flipedCardsCounter = 0;
-                            flipedCards = [];
-                          });
-                        }
-                      });
-                      setState(() {});
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Transform(
+                            transform: Matrix4.identity()
+                              ..setEntry(3, 2, 0.001)
+                              ..rotateY(3.14),
+                            alignment: Alignment.center,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.amber,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                elevation: 10.0,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  symbols[index]["visible"] = true;
+                                  flipedCardsCounter++;
+                                  if (flipedCardsCounter == 2) {
+                                    symbols[index]["visible"] = true;
+                                    Future.delayed(Duration(seconds: 1), () {
+                                      checkFlipedCards();
+                                      flipedCardsCounter = 0;
+                                      flipedCards = [];
+                                    });
+                                  }
+                                });
+                                setState(() {});
+                                Navigator.pop(context);
+                              },
+                              child: Visibility(
+                                visible: symbols[index]["visible"],
+                                child: Text(
+                                  symbols[index]["text"],
+                                  style: const TextStyle(
+                                    fontSize: 28.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
                     },
                     child: Visibility(
                       visible: symbols[index]["visible"],
                       child: Text(
                         symbols[index]["text"],
                         style: const TextStyle(
-                          fontSize: 38.0,
+                          fontSize: 28.0,
                         ),
                       ),
                     ),
